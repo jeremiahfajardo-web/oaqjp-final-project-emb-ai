@@ -1,3 +1,6 @@
+"""
+Flask server for the Emotion Detector Lab Test.
+"""
 # Import Flask, render_template, request from the flask framework package : DONE
 from flask import Flask, render_template, request
 # Import the emotion detector function from the package created: DONE
@@ -21,27 +24,27 @@ def sent_detector():
     # 7b Check if the dominant_emotion is None, indicating an error or invalid input
     if response.get("dominant_emotion") == 'None':
         return "Invalid text!  Please try again."
-    else:
-        # Define the required emotions
-        required_emotions = ["anger", "disgust", "fear", "joy", "sadness"]
-        # Extract only the required emotions with their scores
-        extracted_emotions = {
-            emotion: response.get(emotion, 0)
-            for emotion in required_emotions
-        }
-        # Build the requested formatted string
-        emotion_str = ", ".join(
-            f"'{emotion}': {score}"
-            for emotion, score in extracted_emotions.items()
-        )
-        # Get dominant emotion
-        dominant = response.get("dominant_emotion", "unknown")
-        # Final formatted sentence
-        final_sentence = (
-            f"For the given statement, the system response is {emotion_str}. "
-            f"The dominant emotion is {dominant}."
-        )
-        return final_sentence
+
+    # Define the required emotions
+    required_emotions = ["anger", "disgust", "fear", "joy", "sadness"]
+    # Extract only the required emotions with their scores
+    extracted_emotions = {
+        emotion: response.get(emotion, 0)
+        for emotion in required_emotions
+    }
+    # Build the requested formatted string
+    emotion_str = ", ".join(
+        f"'{emotion}': {score}"
+        for emotion, score in extracted_emotions.items()
+    )
+    # Get dominant emotion
+    dominant = response.get("dominant_emotion", "unknown")
+    # Final formatted sentence
+    final_sentence = (
+        f"For the given statement, the system response is {emotion_str}. "
+        f"The dominant emotion is {dominant}."
+    )
+    return final_sentence
 
 @app.route("/")
 def render_index_page():
@@ -52,7 +55,5 @@ def render_index_page():
     return render_template('index.html')
 
 if __name__ == "__main__":
-    ''' This functions executes the flask app and deploys it on localhost:5000
-    '''
-    #DONE
+    # xecutes the flask app and deploys it on localhost:5000
     app.run(host="0.0.0.0", port=5000)

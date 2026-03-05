@@ -18,30 +18,30 @@ def sent_detector():
     text_to_analyze = request.args.get('textToAnalyze')
     # Pass the text to the sentiment_analyzer function and store the response
     response = emotion_detector(text_to_analyze)
-    # Define the required emotions
-    required_emotions = ["anger", "disgust", "fear", "joy", "sadness"]
-    # Extract only the required emotions with their scores
-    extracted_emotions = {
-        emotion: response.get(emotion, 0)
-        for emotion in required_emotions
-    }
-
-    # Build the requested formatted string
-    emotion_str = ", ".join(
-        f"'{emotion}': {score}"
-        for emotion, score in extracted_emotions.items()
-    )
-
-    # Get dominant emotion
-    dominant = response.get("dominant_emotion", "unknown")
-
-    # Final formatted sentence
-    final_sentence = (
-        f"For the given statement, the system response is {emotion_str}. "
-        f"The dominant emotion is {dominant}."
-    )
-
-    return final_sentence
+    # 7b Check if the dominant_emotion is None, indicating an error or invalid input
+    if response.get("dominant_emotion") == 'None':
+        return "Invalid text!  Please try again."
+    else:
+        # Define the required emotions
+        required_emotions = ["anger", "disgust", "fear", "joy", "sadness"]
+        # Extract only the required emotions with their scores
+        extracted_emotions = {
+            emotion: response.get(emotion, 0)
+            for emotion in required_emotions
+        }
+        # Build the requested formatted string
+        emotion_str = ", ".join(
+            f"'{emotion}': {score}"
+            for emotion, score in extracted_emotions.items()
+        )
+        # Get dominant emotion
+        dominant = response.get("dominant_emotion", "unknown")
+        # Final formatted sentence
+        final_sentence = (
+            f"For the given statement, the system response is {emotion_str}. "
+            f"The dominant emotion is {dominant}."
+        )
+        return final_sentence
 
 @app.route("/")
 def render_index_page():
